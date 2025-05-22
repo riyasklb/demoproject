@@ -1,16 +1,211 @@
-# flutter_application_1
+    # eGrocer Maintenance Guide
 
-A new Flutter project.
+## Generate Keystore
 
-## Getting Started
+Generate a keystore for the app to sign Android APKs:
 
-This project is a starting point for a Flutter application.
+```shell
+cd android/
+keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass {PASSWORD HERE} -keypass {PASSWORD HERE} -dname "CN={Your Name}, OU={Your Unit}, O={Your Organization}, L={Your Location}, S={Your State}, C={Your Country}" 
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Obtain SHA Keys
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+To obtain SHA keys required for integrating Firebase:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```shell
+cd android
+./gradlew signingReport
+cd ..
+```
+
+## Clean Flutter Project
+
+Clean the Flutter project:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+flutter clean
+```
+
+### Clean and Fetch Dependencies
+
+Clean the project and fetch dependencies:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+flutter clean
+yes | flutter pub cache clean
+flutter pub get
+```
+
+### Clean and Fetch Dependencies for iOS
+
+Clean the project and fetch dependencies for iOS:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+flutter clean
+yes | flutter pub cache clean
+flutter pub get
+cd ios/
+pod init
+pod install
+pod update
+```
+
+## Build Android Application
+
+To build the Android application:
+
+```shell
+flutter clean
+yes | flutter pub cache clean
+flutter pub get
+flutter build apk
+mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Customer.apk
+open build/app/outputs/flutter-apk/
+```
+
+## Build Android App Bundle
+
+To build the Android app bundle:
+
+```shell
+flutter clean
+flutter pub get
+flutter build appbundle
+open build/app/outputs/bundle/release/
+```
+
+## Update iOS Pods
+
+Update iOS dependencies:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+flutter clean
+flutter pub get
+cd ios
+pod init
+pod install
+pod update
+cd ..
+```
+
+## Publish iOS App
+
+### Publish Without Changing Version
+
+To publish the iOS app without changing the version:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+cd ios
+flutter clean
+flutter pub get
+pod init
+pod install
+pod update
+xed .
+```
+
+### Publish With Changing Version
+
+To publish the iOS app with a version change:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+cd ios
+flutter clean
+flutter pub get
+pod init
+pod install
+pod update
+flutter build ios
+pod install
+pod update
+xed .
+```
+
+## Resolve Common iOS Errors
+
+To resolve common iOS errors:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+flutter clean
+rm -rf ios/Pods
+rm -rf ios/.symlinks
+rm -rf ios/Flutter/Flutter.framework
+rm -rf Flutter/Flutter.podspec
+rm ios/podfile.lock
+cd ios 
+pod deintegrate
+flutter pub cache repair
+flutter pub get 
+pod install 
+pod update 
+flutter build ios
+pod install 
+pod update
+xed .
+```
+
+## Clean Firebase Data and Cache
+
+To clean old Firebase data and cache from the code:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+rm -rf .pub-cache/
+rm -rf build
+rm -rf firebase.json
+rm -rf android/build
+rm -rf .dart_tool/
+rm -rf .idea
+rm -rf android/.idea
+rm -rf .metadata
+rm -rf .flutter-plugins-dependencies
+rm -rf .flutter-plugins
+rm -rf devtools_options.yaml
+rm -rf analysis_options.yaml
+rm -rf android/app/google-services.json
+rm -rf android/.gradle
+rm -rf ios/.symlinks
+rm -rf ios/Pods
+rm -rf ios/Runner/GoogleService-Info.plist
+rm -rf ios/firebase_app_id_file.json
+rm -rf ios/build
+rm -rf ios/Podfile.lock
+rm -rf pubspec.lock
+rm -rf lib/firebase_options.dart
+```
+
+## Clean Temp Cached Files
+
+To clean cache from the code:
+
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData
+rm -rf .pub-cache/
+rm -rf build
+rm -rf android/build
+rm -rf .dart_tool/
+rm -rf .idea
+rm -rf android/.idea
+rm -rf .vscode/
+rm -rf android/.gradle/
+rm -rf ios/.symlinks/
+rm -rf ios/Pods/
+rm -rf ios/build/
+rm -rf ios/Podfile.lock
+rm -rf pubspec.lock
+rm -rf devtools_options.yaml
+rm -rf analysis_options.yaml
+rm -rf .flutter-plugins
+rm -rf .flutter-plugins-dependencies
+rm -rf ios/Flutter/Flutter.podspec
+rm -rf ios/Flutter/flutter_export_environment.sh
+rm -rf ios/Flutter/Generated.xcconfig
+```
